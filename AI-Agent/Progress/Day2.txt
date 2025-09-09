@@ -1,0 +1,75 @@
+# Roadmap for Day 2: Sitemap & Seed-List Crawling
+# Overview: Build on Day 1 by adding sitemap parsing to discover URLs, then create a script to crawl a limited set of those URLs using your existing scraper, saving outputs as JSON files organized by domain.
+
+# High-Level Steps:
+# 1. Checkout a new branch for Day 2.
+# 2. Create the sitemap parser module.
+# 3. Build the crawl_seed script to fetch from sitemap and scrape N pages.
+# 4. Handle file saving in a structured directory.
+# 5. Test with a real site (e.g., a news site with public sitemap like BBC or CNN).
+# 6. Update README with new run instructions.
+# 7. Commit the changes.
+
+# Detailed Step-by-Step Guide (Run these in your terminal, but type code manually in editor)
+
+# Step 1: Branch Management
+# Ensure you're on main or previous branch, then create new feature branch
+git checkout main  # Or feature/day-01 if not merged
+git checkout -b feature/day-02
+
+# Step 2: Create sitemap.py
+# Create the file in src/scraper
+touch src/scraper/sitemap.py
+# Open in editor: code src/scraper/sitemap.py (or your editor command)
+# Inside: Define a function parse_sitemap(sitemap_url) that:
+# - Fetches the sitemap XML using requests (with User-Agent).
+# - Parses XML with BeautifulSoup (use 'xml' parser).
+# - Extracts <loc> tags for URLs (handle nested sitemaps if needed, but keep simple for now).
+# - Returns a list of URLs.
+# Tip: Import requests, bs4, and maybe logging for errors.
+
+# Step 3: Create crawl_seed.py
+# Create the script in src/scraper
+touch src/scraper/crawl_seed.py
+# Open in editor: code src/scraper/crawl_seed.py
+# Inside: Use if __name__ == "__main__":
+# - Take args: sitemap_url (required), N (optional, default 5 for first N pages).
+# - Use argparse for better CLI (import argparse).
+# - Call parse_sitemap to get URL list.
+# - For each of first N URLs: Run the scraping logic (import and call from simple_scraper.py, or reuse code).
+# - For each scraped dict: Extract domain from URL (use urllib.parse.urlparse).
+# - Create dir: mkdir -p data/raw/<domain>
+# - Save as JSON: Use json.dump to file like data/raw/<domain>/<slug_or_id>.json (make filename from URL path).
+# - Handle errors gracefully (e.g., skip bad URLs).
+
+# Step 4: Directory Setup
+# Create the data directory structure
+mkdir -p data/raw
+
+# Step 5: Testing
+# Run the crawl_seed script with a test sitemap
+# Example: Find a site's sitemap (e.g., https://www.bbc.com/sitemaps/https-sitemap-uk-archive-1.xml)
+python src/scraper/crawl_seed.py https://example.com/sitemap.xml --N 3
+# Check data/raw/<domain>/ for JSON files.
+# Verify contents: cat data/raw/example.com/some-page.json
+
+# Step 6: Update README.md
+# Open README: code README.md
+# Add section: ## Day 2: Sitemap Crawling
+# Instructions:
+# - To parse sitemap: Import and call parse_sitemap(url)
+# - To run seed crawl: python src/scraper/crawl_seed.py <sitemap_url> [--N <num_pages>]
+# - Outputs: JSON files in data/raw/<domain>/
+
+# Step 7: Commit
+git add src/scraper/sitemap.py src/scraper/crawl_seed.py README.md data/  # Add data if you want examples, else .gitignore it
+git commit -m "feat(day-02): sitemap parser + seed crawl; save JSON snapshots"
+
+# Tips for Learning:
+# - Research sitemap XML structure (standard <urlset><url><loc>).
+# - Reuse code from simple_scraper.py (e.g., make it a function to import).
+# - Handle rate limiting: Add time.sleep(1) between requests.
+# - For domains: From urlparse(url).netloc
+# - Filenames: Sanitize URL path (e.g., replace / with _).
+# - If sitemap is gzipped, handle with requests and gzip.
+# Once tested, merge to main if ready.

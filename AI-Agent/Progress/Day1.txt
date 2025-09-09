@@ -1,0 +1,77 @@
+# Day 1: Simple Web Scraper - Step-by-Step Code Building Guide
+# Overview: This guide walks you through typing the code for simple_scraper.py manually in your editor.
+# Use VS Code or nano: code src/scraper/simple_scraper.py (or nano src/scraper/simple_scraper.py)
+# Type each section step-by-step to learn: imports, fetching, parsing, extraction, dict, and output.
+# Test after each major part by running python src/scraper/simple_scraper.py https://www.codersdaddy.com
+
+# Step 1: Import Statements
+# At the top of the file, add these imports one by one:
+# import requests
+# from bs4 import BeautifulSoup
+# (We'll add sys and json later for CLI and output)
+
+# Step 2: Fetch the URL
+# Define the URL (hardcode for now, later make it from args)
+# url = "https://www.codersdaddy.com"
+# response = requests.get(url)
+# Add a User-Agent header for better mimicking a browser:
+# headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
+# response = requests.get(url, headers=headers)
+# Handle basic error: if response.status_code != 200: print("Error fetching"); exit()
+
+# Step 3: Parse HTML with BeautifulSoup
+# soup = BeautifulSoup(response.text, 'html.parser')
+# Optional: print(soup.prettify()) to inspect structure
+
+# Step 4: Extract Headings (H2 as example, adapt for H1/H2)
+# all_headings = soup.find_all("h2")
+# headings = []
+# for heading in all_headings:
+#     headings.append(heading.text.strip())  # Use .strip() to clean whitespace
+
+# Step 5: Extract Title
+# title_tag = soup.find("title")
+# title = title_tag.text.strip() if title_tag else ""
+
+# Step 6: Extract Meta Keywords (adapt for description later)
+# description_tag = soup.find('meta', attrs={"name": "keywords"})  # Change to "description" for meta desc
+# keywords_content = description_tag['content'].strip() if description_tag else ""
+
+# Step 7: Build the Dictionary
+# website_details = {
+#     "h2_headings": headings,  # Use better key names like "h2_headings"
+#     "keywords": keywords_content,
+#     "title": title
+# }
+# print(f"Website Details: {website_details}")
+
+# Step 8: Enhance for CLI and JSON (Full Script Integration)
+# Add import sys  # For sys.argv[1] as URL
+# Add import json  # For JSON output
+# In main: if __name__ == "__main__":
+#     url = sys.argv[1] if len(sys.argv) > 1 else "https://www.codersdaddy.com"
+#     # ... (fetch, parse, extract as above)
+#     print(json.dumps(website_details, indent=2, ensure_ascii=False))  # Pretty JSON to stdout
+
+# Step 9: Test in Terminal
+# Activate venv: source venv/bin/activate  # Or Windows equivalent
+# Run: python src/scraper/simple_scraper.py https://www.codersdaddy.com
+# Expected Output: Pretty JSON with title, headings list, keywords.
+# Check for errors: If no meta, it should be empty string. Tweak selectors if needed.
+# Pro Tip: Uncomment print(soup.prettify()) temporarily to see why extractions might miss (e.g., class names).
+
+# Step 10: Expand for Full Day 1 Features (Type These Additions)
+# - For H1: h1_tag = soup.find("h1"); h1 = h1_tag.text.strip() if h1_tag else ""; Add to dict.
+# - For Meta Description: Change attrs to {"name": "description"}
+# - For Links: all_links = [a['href'] for a in soup.find_all('a', href=True)]; Add to dict.
+# - For Canonical: canon_tag = soup.find('link', rel='canonical'); canon = canon_tag['href'] if canon_tag else ""; Make absolute later with urljoin.
+# - Article Text: article = soup.find('article') or soup.find('div', class_='content'); text = article.get_text(separator=' ', strip=True) if article else soup.get_text()
+# Update dict and test again.
+
+# Learning Notes:
+# - .strip() removes extra spaces/newlines.
+# - Use if exists checks to avoid AttributeError.
+# - For loops on find_all() build lists efficiently.
+# - Dict keys should be descriptive strings.
+# - Run and debug: If output is empty, inspect prettify() output for tag variations (e.g., class="post-body").
+# Once complete, commit as per Day 1 deliverable.
