@@ -1,0 +1,13 @@
+requests
+beautifulsoup4
+lxml
+playwright
+sqlalchemy
+alembic
+pydantic
+fastapi
+uvicorn[standard]
+python-dotenv
+pandas
+pytest
+loguru
