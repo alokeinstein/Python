@@ -10,3 +10,18 @@
 # - Create dir: mkdir -p data/raw/<domain>
 # - Save as JSON: Use json.dump to file like data/raw/<domain>/<slug_or_id>.json (make filename from URL path).
 # - Handle errors gracefully (e.g., skip bad URLs).
+
+import requests 
+from bs4 import BeautifulSoup
+import sitemap
+
+
+result = sitemap.parse_sitemap("https://www.codersdaddy.com/sitemap.xml")
+n_url = result[1:2]
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
+response = requests.get(n_url,headers=headers)
+print(response)
+# soup = BeautifulSoup(response.text, 'html.parser')
+# # h2_heading = [for heading in soup.find_all("h2") h2_heading.append(heading.text)]
+# h2_heading = [heading.text for heading in soup.find_all("h2")]
+# print(h2_heading)

@@ -14,6 +14,7 @@ soup = BeautifulSoup(response.text, 'html.parser')
 
 headings = []
 all_headings = soup.find_all("h2")
+print(all_headings)
 
 for heading in all_headings:
     headings.append(heading.text)
@@ -42,4 +43,4 @@ website_details = {
   "title": title
 }
 
-print(f"Website Details: {website_details}")
+# print(f"Website Details: {website_details}")
